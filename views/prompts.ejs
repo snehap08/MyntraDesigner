@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Myntra Designer - <%= category.charAt(0).toUpperCase() + category.slice(1) %> Wear</title>
+  <link rel='stylesheet' href='/stylesheets/women_styles.css' />
+</head>
+<body>
+  <div class="container">
+    <h1>Customized prompts are coming for you in the future till now please enjoy our suggestions only for you ❤️</h1>
+    <p style="margin: 20px; color: rgb(237, 56, 56);"><strong>Note: Due to high API costs, custom image generation is unavailable for now. If Myntra supports us, we'll launch this feature soon. Meanwhile, explore pre-generated designs below.</strong></p>
+    <form action="/type-prompt" class="wrap" method="post">
+        <div class="prompt-input">
+            <input type="text" name="prompt" class="prompt" placeholder="Type your dream dress description here..." required>
+            <select name="category">
+              <option value="women">Women</option>
+              <option value="men">Men</option>
+              <option value="footwear">Footwear</option>
+              <option value="bags_accessories">Bags and Accessories</option>
+              <!-- Add more categories as needed -->
+          </select>
+        <button type="submit" class="submit-button">🔍</button>
+    </div>
+    </form>
+      
+    <form action="/confirm-prompt" method="post">
+      <div class="grid-container">
+        <% prompts.forEach(function(prompt) { %>
+          <button type="submit" name="selectedPrompt" value="<%= prompt %>">
+            <i>✍️</i>
+            <%= prompt %>
+          </button>
+        <% }); %>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

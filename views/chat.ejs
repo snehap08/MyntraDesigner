@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat with Designer</title>
+    <link rel="stylesheet" href="/stylesheets/chat_style.css" />
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>Chat with <%= designerName %></h2>
+        </div>
+        <div class="chat-messages" id="chat-messages"></div>
+        <div class="chat-input">
+            <form id="chat-form">
+                <input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off">
+                <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                <button type="button" id="image-upload-button">📷</button>
+                <button type="submit">Send</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            const socket = io();
+            const chatForm = $('#chat-form');
+            const chatInput = $('#chat-input');
+            const chatMessages = $('#chat-messages');
+            const imageUploadButton = $('#image-upload-button');
+            const imageUpload = $('#image-upload');
+
+            socket.on('message', function(message) {
+                const div = $('<div>').addClass('message').text(message);
+                chatMessages.append(div);
+                chatMessages.scrollTop(chatMessages[0].scrollHeight);
+            });
+
+            chatForm.on('submit', function(e) {
+                e.preventDefault();
+                const message = chatInput.val();
+                socket.emit('chatMessage', message);
+                chatInput.val('');
+            });
+
+            imageUploadButton.on('click', function() {
+                imageUpload.click();
+            });
+
+            imageUpload.on('change', function() {
+                const file = this.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = $('<img>').attr('src', e.target.result).addClass('chat-image');
+                    chatMessages.append(img);
+                    chatMessages.scrollTop(chatMessages[0].scrollHeight);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+    </script>
+</body>
+</html>
